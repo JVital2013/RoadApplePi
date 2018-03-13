@@ -1,5 +1,4 @@
 # RoadApplePi 
-![RoadApplePi Logo](/html/icon.png?raw=true)
 RoadApplePi is a simple to install system for your Raspberry Pi designed to record dashcam videos and engine information from your car in real-time, and then make it all accessable from an easy-to-use Web App that can be viewed on your smartphone or computer.
 ## Features
  - **Dashcam Recordings with car stats:** Whenever your RoadApplePi is powered on and connected to a webcam and Bluetooth OBD2 reader, it's recording every piece of information it can scrape up. Using hardware-accelerated video encoding, this results in smooth dashcam footage and an instrument cluster that shows exactly what you (and others around you) were doing at any given time.
