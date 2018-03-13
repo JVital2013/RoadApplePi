@@ -1,0 +1,10 @@
+[Unit]
+Description=RoadApplePi Recording Manager
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/raprec
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

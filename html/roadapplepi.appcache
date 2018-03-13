@@ -1,0 +1,25 @@
+CACHE MANIFEST
+# v0.2.3 - 2018-3-11
+
+index.php
+logo.svg
+script.js
+styles.css
+justgage.js
+raphael-2.1.4.min.js
+localforage.min.js
+fontawesome-all.js
+manifest.json
+icon.png
+
+opensans/59ZRklaO5bWGqF5A9baEERJtnKITppOI_IvcXXDNrsc.woff2
+opensans/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2
+opensans/LWCjsQkB6EMdfHrEVqA1KRJtnKITppOI_IvcXXDNrsc.woff2
+opensans/RjgO7rYTmqiVp7vzi-Q5URJtnKITppOI_IvcXXDNrsc.woff2
+opensans/u-WUoqrET9fUeobQW7jkRRJtnKITppOI_IvcXXDNrsc.woff2
+opensans/xozscpT2726on7jbcb_pAhJtnKITppOI_IvcXXDNrsc.woff2
+
+
+
+NETWORK:
+*
