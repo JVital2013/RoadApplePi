@@ -13,7 +13,7 @@ Raspberry Pi, this may take several hours.
 "
 
 #Prompt user if they want to continue
-read -p "Would you like to continue? (y/N)" answer
+read -p "Would you like to continue? (y/N) " answer
 if [ "$answer" == "n" ] || [ "$answer" == "N" ] || [ "$answer" == "" ]
 then
 	echo "Setup aborted"
@@ -25,7 +25,7 @@ fi
 #################
 echo -e "\e[1;4;93mStep 1. Updating system\e[0m"
 sudo apt update
-sudo apt upgrade
+sudo apt upgrade -y
 
 ###########################################
 # Install pre-built dependencies from Apt #
@@ -42,7 +42,7 @@ wget https://www.ffmpeg.org/releases/ffmpeg-3.4.2.tar.gz
 tar -xvf ffmpeg-3.4.2.tar.gz
 cd ffmpeg-3.4.2
 ./configure --enable-gpl --enable-nonfree --enable-mmal --enable-omx --enable-omx-rpi
-make
+make -j$(nproc)
 sudo make install
 
 #######################
@@ -50,11 +50,11 @@ sudo make install
 #######################
 echo -e "\e[1;4;93mStep 99. Building and installing RoadApplePi\e[0m"
 cd ..
-make clean
 make
 sudo make install
 
 sudo cp -r html /var/www/
+sudo rm /var/www/html/index.html
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 0755 /var/www/html
 sudo cp raprec.service /lib/systemd/system
