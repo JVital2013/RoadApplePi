@@ -91,5 +91,5 @@ If you really like this project and want to give back, donations are accepted!
 
  - **Bitcoin:** 177S69eip9mqpygozXKq9tzggK5aMpzKxQ
  - **Ethereum:** 0x40E182eF00F6834936Db68A1868699B0b23D8094  
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](BJUZ3R3JVAFK6)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BJUZ3R3JVAFK6)
 
