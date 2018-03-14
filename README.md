@@ -63,7 +63,7 @@ Fair warning, I haven't actually tried this, but it should work fine.
 Although this option is more complicated in initial setup compared to the Mausberry, it's the path I opted for and I've had great success. The SleepyPi 2 (https://spellfoundry.com/product/sleepy-pi-2/) is inherently an Arduino-based "Hat" for the Raspberry Pi that can be programmed as needed. Out-of-the-box, the SleepyPi 2 performs 2 functions that we care about: voltage transformation to Raspberry Pi friendly voltages, and an easy-to-configure RTC. However, it does not automatically power off the Pi when the car is switched off.
  - It must be programmed to do this. I've already modified one of Spell Foundry's example programs to do just this, and is the `RoadApplePi.ino` file in this repository. To flash this sketch onto your Sleepy Pi, see https://spellfoundry.com/sleepy-pi/programming-arduino-ide/.
  - You need to build a voltage divider for the program to be able to properly read the current power status of the car.  Thanks to Spell Foundry, here's the voltage divider you need to build:  
-![Voltage Divider](https://spellfoundry.com/wp/wp-content/uploads/2016/11/Car-GPIO-Level-Signaller.png)
+![Voltage Divider](https://spellfoundry.com/wp/wp-content/uploads/2016/11/Car-GPIO-Level-Signaller.png)  
 You can build this circuit on whatever you would like, but I used a solderable breadboard. For those less well-versed in reading schematics, here's a quick explanation of what you're doing
 	 - *(Not shown in this schematic)* Wire an always-hot line from your fuse box to the VIN of the SleepyPi
 	 - Wire an ignition-dependent line into the voltage divider (signified by the 14.4V in the diagram)
