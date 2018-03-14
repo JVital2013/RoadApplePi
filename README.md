@@ -1,4 +1,3 @@
-
 # RoadApplePi 
 RoadApplePi is a simple to install system for your Raspberry Pi designed to record dashcam videos and engine information from your car in real-time, and then make it all accessable from an easy-to-use Web App that can be viewed on your smartphone or computer.
 
@@ -63,7 +62,7 @@ Fair warning, I haven't actually tried this, but it should work fine.
 ### SleepyPi 2
 Although this option is more complicated in initial setup compared to the Mausberry, it's the path I opted for and I've had great success. The SleepyPi 2 (https://spellfoundry.com/product/sleepy-pi-2/) is inherently an Arduino-based "Hat" for the Raspberry Pi that can be programmed as needed. Out-of-the-box, the SleepyPi 2 performs 2 functions that we care about: voltage transformation to Raspberry Pi friendly voltages, and an easy-to-configure RTC. However, it does not automatically power off the Pi when the car is switched off.
  - It must be programmed to do this. I've already modified one of Spell Foundry's example programs to do just this, and is the `RoadApplePi.ino` file in this repository. To flash this sketch onto your Sleepy Pi, see https://spellfoundry.com/sleepy-pi/programming-arduino-ide/.
- - You need to build a voltage divider for the program to be able to properly read the current power status of the car.  Thanks to Spell Foundry, here's the voltage divider you need to build:
+ - You need to build a voltage divider for the program to be able to properly read the current power status of the car.  Thanks to Spell Foundry, here's the voltage divider you need to build:  
 ![Voltage Divider](https://spellfoundry.com/wp/wp-content/uploads/2016/11/Car-GPIO-Level-Signaller.png)
 You can build this circuit on whatever you would like, but I used a solderable breadboard. For those less well-versed in reading schematics, here's a quick explanation of what you're doing
 	 - *(Not shown in this schematic)* Wire an always-hot line from your fuse box to the VIN of the SleepyPi
@@ -71,7 +70,7 @@ You can build this circuit on whatever you would like, but I used a solderable b
 	 - Wire a ground wire from your car into both the voltage divider (very bottom of the diagram) and the 0V part of the power input on the SleepyPi.
 	 - *The outputs of the voltage divider are on the right of the diagram.* If you're using my SleepyPi sketch, wire the 3.09V output into Pin 14 of the Sleepy Pi, and the 0V output to the SleepyPi's GND
  - Once assembled, you're left with a 3-layer sandwich: your raspberry pi, the sleepy pi, and your voltage divider. Here's what mine looks like installed in my car:
- ![Isn't it purdy?](/../screenshots/mypi.png?raw=true)
+ ![Isn't it purdy?](/../screenshots/mypi.jpg?raw=true)
 
 ## Licensing
 RoadApplePi is released under the GPLv3. For more information, see COPYING
