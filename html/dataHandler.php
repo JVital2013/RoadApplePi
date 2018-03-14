@@ -46,7 +46,7 @@ if($_GET['action'] == "obdLog")
 //Gets latest OBD Information
 if($_GET['action'] == "obdDump" && is_numeric($_GET['timestamp']))
 {
-	//Only called during gage sync, which requires an accurate clock. Sync time now
+	//Only called during gauge sync, which requires an accurate clock. Sync time now
 	system("raprun -n " . $_GET['timestamp']);
 	
 	$mysqli = new mysqli('127.0.0.1', 'roadapplepi', 'roadapplepi', 'roadapplepi');
@@ -179,7 +179,7 @@ if($_GET['action'] == "vidList")
 
 	$timestamps = array_values($timestamps);
 	sort($timestamps);
-	echo json_encode($timestamps);
+	echo (count($timestamps) == 0 ? "[]" : json_encode($timestamps));
 	exit();
 }
 

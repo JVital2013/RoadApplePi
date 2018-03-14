@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with RoadApplePi.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-//<html manifest="roadapplepi.appcache">
 ?>
 <!DOCTYPE html>
 <html manifest="roadapplepi.appcache">
@@ -31,6 +29,7 @@
 		<link rel="apple-touch-icon" href="/icon.png">
 	
 		<link rel="stylesheet" href="/styles.css">
+		<link rel="stylesheet" href="/opensans.css">
 		<link rel="manifest" href="/manifest.json">
 		<script src='/script.js'></script>
 		<script src='/justgage.js'></script>

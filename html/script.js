@@ -20,16 +20,16 @@
 var sideBar = false;
 var offline = false;
 var selectedMenu = 0;
-var showGages = 1;
+var showGauges = 1;
 var imperial = 0;
 var forageLoaded = 0;
 var logReturned = false;
-var gagesBuilt = false;
-var refreshGages = false;
-var liveGagesRunning = false;
+var gaugesBuilt = false;
+var refreshGauges = false;
+var liveGaugesRunning = false;
 var savedVideos = [];
 var savedOBDLogs = [];
-var updateLastTimeInstance, lastSeconds, lastHours, lastMinutes, obdStream, getSupportedGages, getInitialStatus, refreshValue, obdLog, obdCodes, fetchCodes, fetchGages, fetchVideo, obdPlayerInstance, currentVideo, videoArray, dateArray, videoSelect, calcEngineLoad, coolantTemp, b1stft, b1ltft, b2stft, b2ltft, intakePressure, rpm, speed, timingAdvance, airTemp, throttlePos;
+var updateLastTimeInstance, lastSeconds, lastHours, lastMinutes, obdStream, getSupportedGauges, getInitialStatus, refreshValue, obdLog, obdCodes, fetchCodes, fetchGauges, fetchVideo, obdPlayerInstance, currentVideo, videoArray, dateArray, videoSelect, calcEngineLoad, coolantTemp, b1stft, b1ltft, b2stft, b2ltft, intakePressure, rpm, speed, timingAdvance, airTemp, throttlePos;
 
 var LOADING_TEXT = "<div style='height: 10px;'></div><div class='loadWait'>Loading, please wait...</div>";
 
@@ -63,14 +63,14 @@ function menuSelect(menuNumber)
 	retractDrawer();
 	
 	//Cancel any pending async tasks
-	liveGagesRunning = false;
+	liveGaugesRunning = false;
 	clearTimeout(obdPlayerInstance);
 	clearTimeout(updateLastTimeInstance);
 	if(typeof obdStream != "undefined") obdStream.close();
-	if(typeof fetchGages != "undefined") fetchGages.abort();
+	if(typeof fetchGauges != "undefined") fetchGauges.abort();
 	if(typeof fetchCodes != "undefined") fetchCodes.abort();
 	if(typeof fetchVideo != "undefined") fetchVideo.abort();
-	if(typeof getSupportedGages != "undefined") getSupportedGages.abort();
+	if(typeof getSupportedGauges != "undefined") getSupportedGauges.abort();
 	if(typeof getInitialStatus != "undefined") getInitialStatus.abort();
 	
 	//Load the new view
@@ -411,11 +411,11 @@ function menuSelect(menuNumber)
 
 function loadVideo(newVideo)
 {
-	if(typeof fetchGages != "undefined") fetchGages.abort();
+	if(typeof fetchGauges != "undefined") fetchGauges.abort();
 	if(typeof fetchCodes != "undefined") fetchCodes.abort();
 	
 	obdLog = [];
-	gagesBuilt = logReturned = false;
+	gaugesBuilt = logReturned = false;
 
 	currentVideo = newVideo = parseInt(newVideo);
 	vidPlayer = document.getElementById('dashPlayer');
@@ -482,7 +482,7 @@ function loadVideo(newVideo)
 
 
 	//Get supported OBD codes
-	document.getElementById("gageBox").innerHTML = "<div style='padding: 15px;'>Loading gages...</div>";
+	document.getElementById("gaugeBox").innerHTML = "<div style='padding: 15px;'>Loading gauges...</div>";
 	localforage.getItem('supportedCode' + videoArray[newVideo], function(err, value)
 	{
 		if(value == null)
@@ -501,13 +501,13 @@ function loadVideo(newVideo)
 		}
 		else obdCodes = value;
 
-		//Get OBD log for this timeframe and play video + gages
+		//Get OBD log for this timeframe and play video + gauges
 		localforage.getItem('obdLog' + videoArray[newVideo], function(err2, value2)
 		{
 			if(value2 == null)
 			{
-				fetchGages = new XMLHttpRequest();
-				fetchGages.onreadystatechange = function()
+				fetchGauges = new XMLHttpRequest();
+				fetchGauges.onreadystatechange = function()
 				{
 					if(this.readyState == 4 && this.status == 200)
 					{
@@ -520,8 +520,8 @@ function loadVideo(newVideo)
 						document.getElementById('dashPlayer').play();
 					}
 				};
-				fetchGages.open("GET", "dataHandler.php?action=obdLog&min=" + videoArray[newVideo] + "&max=" + (videoArray.length == newVideo ? 0 : videoArray[newVideo + 1]), true);
-				fetchGages.send();
+				fetchGauges.open("GET", "dataHandler.php?action=obdLog&min=" + videoArray[newVideo] + "&max=" + (videoArray.length == newVideo ? 0 : videoArray[newVideo + 1]), true);
+				fetchGauges.send();
 			}
 			else
 			{
@@ -690,17 +690,17 @@ function btPair()
 	pairBt.className = "settingsItem settingsButton disabled";
 	pairBt.innerHTML = "Pairing...";
 }
-function buildGages()
+function buildGauges()
 {
-	gageBox = document.getElementById('gageBox');
+	gaugeBox = document.getElementById('gaugeBox');
 	for(i = 0; i < 0xE1; i++) if(obdCodes[i]) switch(i)
 	{
 		case 0x04:
-		newGage = document.createElement('div');
-		newGage.id = "calcEngineLoad";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "calcEngineLoad";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		calcEngineLoad = new JustGage({
 			id: "calcEngineLoad",
 			value: refreshValue[i],
@@ -712,11 +712,11 @@ function buildGages()
 		});
 		break;
 		case 0x05:
-		newGage = document.createElement('div');
-		newGage.id = "coolantTemp";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "coolantTemp";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		coolantTemp = new JustGage({
 			id: "coolantTemp",
 			value: (imperial ? Math.round(refreshValue[i] * 1.8) + 32 : refreshValue[i]),
@@ -728,11 +728,11 @@ function buildGages()
 		});
 		break;
 		case 0x06:
-		newGage = document.createElement('div');
-		newGage.id = "b1stft";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "b1stft";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		b1stft = new JustGage({
 			id: "b1stft",
 			value: refreshValue[i],
@@ -744,11 +744,11 @@ function buildGages()
 		});
 		break;
 		case 0x07:
-		newGage = document.createElement('div');
-		newGage.id = "b1ltft";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "b1ltft";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		b1ltft = new JustGage({
 			id: "b1ltft",
 			value: refreshValue[i],
@@ -760,11 +760,11 @@ function buildGages()
 		});
 		break;
 		case 0x08:
-		newGage = document.createElement('div');
-		newGage.id = "b2stft";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "b2stft";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		b2stft = new JustGage({
 			id: "b2stft",
 			value: refreshValue[i],
@@ -776,11 +776,11 @@ function buildGages()
 		});
 		break;
 		case 0x09:
-		newGage = document.createElement('div');
-		newGage.id = "b2ltft";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "b2ltft";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		b2ltft = new JustGage({
 			id: "b2ltft",
 			value: refreshValue[i],
@@ -792,11 +792,11 @@ function buildGages()
 		});
 		break;
 		case 0x0B:
-		newGage = document.createElement('div');
-		newGage.id = "intakePressure";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "intakePressure";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		intakePressure = new JustGage({
 			id: "intakePressure",
 			value: (imperial ? Math.round(refreshValue[i] * 0.14503773773020923) : refreshValue[i]),
@@ -808,11 +808,11 @@ function buildGages()
 		});
 		break;
 		case 0x0C:
-		newGage = document.createElement('div');
-		newGage.id = "rpm";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "rpm";
+		newGauge.className = "obdGauge";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		rpm = new JustGage({
 			id: "rpm",
 			value: refreshValue[i],
@@ -823,11 +823,11 @@ function buildGages()
 		});
 		break;
 		case 0x0D:
-		newGage = document.createElement('div');
-		newGage.id = "speed";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "speed";
+		newGauge.className = "obdGague";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		speed = new JustGage({
 			id: "speed",
 			value: (imperial ? Math.round(refreshValue[i] * 0.62137119223733) : refreshValue[i]),
@@ -839,11 +839,11 @@ function buildGages()
 		});
 		break;
 		case 0x0E:
-		newGage = document.createElement('div');
-		newGage.id = "timingAdvance";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "timingAdvance";
+		newGauge.className = "obdGague";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		timingAdvance = new JustGage({
 			id: "timingAdvance",
 			value: refreshValue[i],
@@ -855,11 +855,11 @@ function buildGages()
 		});
 		break;
 		case 0x0F:
-		newGage = document.createElement('div');
-		newGage.id = "airTemp";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "airTemp";
+		newGauge.className = "obdGague";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		airTemp = new JustGage({
 			id: "airTemp",
 			value: (imperial ? Math.round(refreshValue[i] * 1.8) + 32 : refreshValue[i]),
@@ -871,11 +871,11 @@ function buildGages()
 		});
 		break;
 		case 0x11:
-		newGage = document.createElement('div');
-		newGage.id = "throttlePos";
-		newGage.className = "obdGage";
+		newGauge = document.createElement('div');
+		newGauge.id = "throttlePos";
+		newGauge.className = "obdGague";
 
-		gageBox.appendChild(newGage);
+		gaugeBox.appendChild(newGauge);
 		throttlePos = new JustGage({
 			id: "throttlePos",
 			value: refreshValue[i],
@@ -888,7 +888,7 @@ function buildGages()
 		break;
 	}
 }
-function setAllGages()
+function setAllGauges()
 {
 	for(i = 0; i < 0xE1; i++) if(obdCodes[i]) switch(i)
 	{
@@ -906,37 +906,38 @@ function setAllGages()
 		case 0x11: throttlePos.refresh(refreshValue[i]); break;
 	}
 }
-function updateGage(gageObject)
+function updateGauge(gaugeObject)
 {
-	if(gageObject.mode == 1 && obdCodes[parseInt(gageObject.pid)]) switch(parseInt(gageObject.pid))
+	if(gaugeObject.mode == 1 && obdCodes[parseInt(gaugeObject.pid)]) switch(parseInt(gaugeObject.pid))
 	{
-		case 0x04: calcEngineLoad.refresh(gageObject.value); break;
-		case 0x05: coolantTemp.refresh(imperial ? Math.round(gageObject.value * 1.8) + 32 : gageObject.value); break;
-		case 0x06: b1stft.refresh(gageObject.value); break;
-		case 0x07: b1ltft.refresh(gageObject.value); break;
-		case 0x08: b2stft.refresh(gageObject.value); break;
-		case 0x09: b2ltft.refresh(gageObject.value); break;
-		case 0x0B: intakePressure.refresh(imperial ? Math.round(gageObject.value * 0.14503773773020923) : gageObject.value); break;
-		case 0x0C: rpm.refresh(gageObject.value); break;
-		case 0x0D: speed.refresh(imperial ? Math.round(gageObject.value * 0.62137119223733) : gageObject.value); break;
-		case 0x0E: timingAdvance.refresh(gageObject.value); break;
-		case 0x0F: airTemp.refresh(imperial ? Math.round(gageObject.value * 1.8) + 32 : gageObject.value); break;
-		case 0x11: throttlePos.refresh(gageObject.value); break;
+		case 0x04: calcEngineLoad.refresh(gaugeObject.value); break;
+		case 0x05: coolantTemp.refresh(imperial ? Math.round(gaugeObject.value * 1.8) + 32 : gaugeObject.value); break;
+		case 0x06: b1stft.refresh(gaugeObject.value); break;
+		case 0x07: b1ltft.refresh(gaugeObject.value); break;
+		case 0x08: b2stft.refresh(gaugeObject.value); break;
+		case 0x09: b2ltft.refresh(gaugeObject.value); break;
+		case 0x0B: intakePressure.refresh(imperial ? Math.round(gaugeObject.value * 0.14503773773020923) : gaugeObject.value); break;
+		case 0x0C: rpm.refresh(gaugeObject.value); break;
+		case 0x0D: speed.refresh(imperial ? Math.round(gaugeObject.value * 0.62137119223733) : gaugeObject.value); break;
+		case 0x0E: timingAdvance.refresh(gaugeObject.value); break;
+		case 0x0F: airTemp.refresh(imperial ? Math.round(gaugeObject.value * 1.8) + 32 : gaugeObject.value); break;
+		case 0x11: throttlePos.refresh(gaugeObject.value); break;
 	}
 }
 function livePlayer()
 {
-	//Get currently support gages and build them
+	//Get currently support gauges and build them
 	currentTime = new Date();
-	getSupportedGages = new XMLHttpRequest();
-	getSupportedGages.onreadystatechange = function()
+	getSupportedGauges = new XMLHttpRequest();
+	getSupportedGauges.onreadystatechange = function()
 	{
 		if(this.readyState == 4 && this.status == 200)
 		{
 			obdCodes = JSON.parse(this.responseText);
 			if(obdCodes.length == 0)
 			{
-				mainContent.innerHTML = "<div style='height: 10px;'></div><div class='loadWait'>There is no recorded information!</div>";
+				mainContent.innerHTML = "<div style='height: 10px;'></div><div class='loadWait'>No gauge information has been recorded</div>";
+				return;
 			}
 			getInitialStatus = new XMLHttpRequest();
 			getInitialStatus.onreadystatechange = function()
@@ -944,8 +945,8 @@ function livePlayer()
 				if(this.readyState == 4 && this.status == 200)
 				{
 					refreshValue = JSON.parse(this.responseText);
-					gageHolder = document.createElement('div');
-					gageHolder.className = "prettyBox";
+					gaugeHolder = document.createElement('div');
+					gaugeHolder.className = "prettyBox";
 					
 					lastUpdateHolder = document.createElement('div');
 					lastUpdateHolder.className = "lastUpdateHolder";
@@ -953,20 +954,20 @@ function livePlayer()
 					lastUpdateText = document.createElement('div');
 					lastUpdateText.className = "lastUpdateText";
 					lastUpdateText.id = "lastUpdateText";
-					lastUpdateText.innerHTML = "Finishing gage sync..."
+					lastUpdateText.innerHTML = "Finishing gauge sync..."
 					lastUpdateHolder.appendChild(lastUpdateText);
-					gageHolder.appendChild(lastUpdateHolder);
+					gaugeHolder.appendChild(lastUpdateHolder);
 					
-					gageBox = document.createElement('div');
-					gageBox.className = 'gageBox';
-					gageBox.id = 'gageBox';
-					gageHolder.appendChild(gageBox);
+					gaugeBox = document.createElement('div');
+					gaugeBox.className = 'gaugeBox';
+					gaugeBox.id = 'gaugeBox';
+					gaugeHolder.appendChild(gaugeBox);
 					
 					mainContent.innerHTML = "";
-					mainContent.appendChild(gageHolder);
+					mainContent.appendChild(gaugeHolder);
 					
-					buildGages();
-					setAllGages();
+					buildGauges();
+					setAllGauges();
 				
 					obdStream = new EventSource("dataHandler.php?action=obdStream");
 					obdStream.onmessage = function(event)
@@ -975,7 +976,7 @@ function livePlayer()
 						latestUpdate = JSON.parse(event.data);
 						latestUpdate.forEach(function(element)
 						{
-							liveGagesRunning = true;
+							liveGaugesRunning = true;
 							lastSeconds = Math.round((currentTime.getTime() - parseInt(element.timestamp)) / 1000);
 							
 							lastHours = Math.floor(lastSeconds / 3600);
@@ -983,7 +984,7 @@ function livePlayer()
 							lastMinutes = Math.floor(lastSeconds / 60);
 							lastSeconds %= 60;
 							
-							updateGage(element);
+							updateGauge(element);
 						});
 					};
 					
@@ -995,12 +996,12 @@ function livePlayer()
 		}
 		else if (this.readyState == 4 && this.status == 0) mainContent.innerHTML = "<div style='height: 10px;'></div><div class='offlineMessage'><i class='fa fa-times-circle' aria-hidden='true'></i> This feature is not available in offline mode</div>";
 	}
-	getSupportedGages.open("GET", "dataHandler.php?action=obdCodes&timestamp=" + currentTime.getTime(), true);
-	getSupportedGages.send();
+	getSupportedGauges.open("GET", "dataHandler.php?action=obdCodes&timestamp=" + currentTime.getTime(), true);
+	getSupportedGauges.send();
 }
 function updateLastTime()
 {
-	if(liveGagesRunning)
+	if(liveGaugesRunning)
 	{
 		lastSeconds++;
 		if(lastSeconds == 60)
@@ -1018,7 +1019,7 @@ function updateLastTime()
 }
 function obdPlayer()
 {
-	if(!showGages) return;
+	if(!showGauges) return;
 	if(!logReturned)
 	{
 		obdPlayerInstance = setTimeout(obdPlayer, 100);
@@ -1026,52 +1027,52 @@ function obdPlayer()
 	}
 
 	videoTime = (document.getElementById('dashPlayer').currentTime * 1000) + parseInt(videoArray[currentVideo]);
-	gageBox = document.getElementById('gageBox');
+	gaugeBox = document.getElementById('gaugeBox');
 
 	if(parseInt(obdLog[0].timestamp) > videoTime)
 	{
-		gagesBuilt = false;
-		if(gageBox.innerHTML != ("<div style='padding: 15px;'>OBD Information starts " + Math.round((obdLog[0].timestamp - parseInt(videoArray[currentVideo])) / 1000) + " seconds into this clip</div>"))
-			gageBox.innerHTML = "<div style='padding: 15px;'>OBD Information starts " + Math.round((obdLog[0].timestamp - parseInt(videoArray[currentVideo])) / 1000) + " seconds into this clip</div>";
+		gaugesBuilt = false;
+		if(gaugeBox.innerHTML != ("<div style='padding: 15px;'>OBD Information starts " + Math.round((obdLog[0].timestamp - parseInt(videoArray[currentVideo])) / 1000) + " seconds into this clip</div>"))
+			gaugeBox.innerHTML = "<div style='padding: 15px;'>OBD Information starts " + Math.round((obdLog[0].timestamp - parseInt(videoArray[currentVideo])) / 1000) + " seconds into this clip</div>";
 		obdPlayerInstance = setTimeout(obdPlayer, obdLog[0].timestamp - videoTime);
 		return;
 	}
 	
-	//Find where we're at in the array. If necessary, determine last value when gages need refreshed (ex. skipping around)
+	//Find where we're at in the array. If necessary, determine last value when gauges need refreshed (ex. skipping around)
 	timeIndex = 0;
 	refreshValue = [];
 	while(parseInt(obdLog[timeIndex].timestamp) < videoTime)
 	{
-		if(refreshGages || !gagesBuilt) refreshValue[obdLog[timeIndex].pid] = obdLog[timeIndex].value;
+		if(refreshGauges || !gaugesBuilt) refreshValue[obdLog[timeIndex].pid] = obdLog[timeIndex].value;
 		timeIndex++;
 	}
 	
 	//If we're before a keyframe, we may not have a starting value. Read it from the keyframe
-	if(refreshGages || !gagesBuilt)
+	if(refreshGauges || !gaugesBuilt)
 		for(i = 0; i < 0xE1; i++) if(obdCodes[i])
 			for(j = i; typeof refreshValue[i] == "undefined" && j + timeIndex < obdLog.length; j++)
 				if(obdLog[timeIndex + j].pid == i)
 					refreshValue[i] = obdLog[timeIndex + j].value;
 
-	//Build gages
-	if(!gagesBuilt)
+	//Build gauges
+	if(!gaugesBuilt)
 	{
-		gageBox.innerHTML = "";
-		buildGages();
-		gagesBuilt = true;
+		gaugeBox.innerHTML = "";
+		buildGauges();
+		gaugesBuilt = true;
 	}
 	
-	//Gages are to be refreshed
-	if(refreshGages)
+	//Gauges are to be refreshed
+	if(refreshGauges)
 	{
-		setAllGages();
-		refreshGages = false;
+		setAllGauges();
+		refreshGauges = false;
 	}
 
 	//Most of the time, this function "falls through" until here. Show the new value
-	updateGage(obdLog[timeIndex]);
+	updateGauge(obdLog[timeIndex]);
 	
-	//Run again at next gage update
+	//Run again at next gauge update
 	if(obdLog.length != timeIndex + 1) obdPlayerInstance = setTimeout(obdPlayer, obdLog[timeIndex + 1].timestamp - videoTime - 100);
 }
 function addToCache()
@@ -1190,7 +1191,7 @@ function parseVideos()
 	video.onplay = obdPlayer;
 	video.onpause = function()
 	{
-		refreshGages = true;
+		refreshGauges = true;
 		clearTimeout(obdPlayerInstance);
 	};
 	video.ontimeupdate = function()
@@ -1241,15 +1242,15 @@ function parseVideos()
 	prettyBox.appendChild(downloadBox);
 	mainContent.appendChild(prettyBox);
 
-	gageHolder = document.createElement('div');
-	gageHolder.className = "prettyBox";
+	gaugeHolder = document.createElement('div');
+	gaugeHolder.className = "prettyBox";
 	
 	gsHolder = document.createElement('div');
 	gsHolder.className = "gsHolder";
 	
 	gsLabel = document.createElement('div');
 	gsLabel.className = "gsLabel";
-	gsLabel.innerHTML = "Show gages";
+	gsLabel.innerHTML = "Show gauges";
 	gsHolder.appendChild(gsLabel);
 	
 	gsWrapper = document.createElement('div');
@@ -1260,24 +1261,24 @@ function parseVideos()
 	
 	gsInput = document.createElement('input')
 	gsInput.type = "checkbox";
-	gsInput.checked = showGages;
+	gsInput.checked = showGauges;
 	gsInput.addEventListener('click', function()
 	{
-		showGages = !showGages;
-		localStorage.setItem("showGages", (showGages ? 1 : 0));
+		showGauges = !showGauges;
+		localStorage.setItem("showGauges", (showGauges ? 1 : 0));
 		
-		if(showGages)
+		if(showGauges)
 		{
-			document.getElementById('gageBox').innerHTML = "<div style='padding: 15px;'>Loading gages...</div>";
-			document.getElementById('gageBox').style.display = "";
+			document.getElementById('gaugeBox').innerHTML = "<div style='padding: 15px;'>Loading gauges...</div>";
+			document.getElementById('gaugeBox').style.display = "";
 			obdPlayerInstance = setTimeout(obdPlayer, 0);
 		}
 		else
 		{
 			clearTimeout(obdPlayerInstance);
-			gagesBuilt = false;
-			document.getElementById('gageBox').style.display = "none";
-			document.getElementById('gageBox').innerHTML = "";
+			gaugesBuilt = false;
+			document.getElementById('gaugeBox').style.display = "none";
+			document.getElementById('gaugeBox').innerHTML = "";
 		}
 	});
 	gsLabel.appendChild(gsInput);
@@ -1287,15 +1288,15 @@ function parseVideos()
 	gsLabel.appendChild(gsSlider);
 	gsWrapper.appendChild(gsLabel);
 	gsHolder.appendChild(gsWrapper);
-	gageHolder.appendChild(gsHolder);
+	gaugeHolder.appendChild(gsHolder);
 	
-	gageBox = document.createElement('div');
-	gageBox.className = 'gageBox';
-	gageBox.id = 'gageBox';
-	if(!showGages) gageBox.style.display = "none";
-	gageHolder.appendChild(gageBox);
+	gaugeBox = document.createElement('div');
+	gaugeBox.className = 'gaugeBox';
+	gaugeBox.id = 'gaugeBox';
+	if(!showGauges) gaugeBox.style.display = "none";
+	gaugeHolder.appendChild(gaugeBox);
 	
-	mainContent.appendChild(gageHolder);
+	mainContent.appendChild(gaugeHolder);
 
 	paddingBox = document.createElement('div');
 	paddingBox.style.height = '10px';
@@ -1307,7 +1308,7 @@ function parseVideos()
 window.addEventListener("load", function()
 {
 	if(localStorage.getItem('imperial') != null) imperial = parseInt(localStorage.getItem('imperial'));
-	if(localStorage.getItem('showGages') != null) showGages = parseInt(localStorage.getItem('showGages'));
+	if(localStorage.getItem('showGauges') != null) showGauges = parseInt(localStorage.getItem('showGauges'));
 	if(sessionStorage.getItem('selectedMenu') != null) selectedMenu = parseInt(sessionStorage.getItem('selectedMenu'));
 	localforage.getItem('savedOBDLogs', function (err, value)
 	{
