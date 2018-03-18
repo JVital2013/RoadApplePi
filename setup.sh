@@ -6,7 +6,7 @@ Welcome to RoadApplePi setup. RoadApplePi is \"Black Box\" software that
 can be retrofitted into any car with an OBD port. This software is meant
 to be installed on a Raspberry Pi running unmodified Raspbian Stretch,
 but it may work on other OSs or along side other programs and modifications.
-Use with anything other then out-of-the-boxVanilla Raspbain Stretch is not
+Use with anything other then out-of-the-box Vanilla Raspbain Stretch is not
 supported.
 
 This script will download, compile, and install the necessary dependencies
@@ -76,8 +76,7 @@ sudo cp dnsmasq.conf /etc
 
 installDate=$(date)
 cp roadapplepi.sql roadapplepi-configd.sql
-echo "INSERT INTO env (name, value) VALUES (\"rapVersion\", \"$softwareVersion\";" >> roadapplepi-configd.sql
-echo "INSERT INTO env (name, value) VALUES (\"installDate\", \"$installDate\";" >> roadapplepi-configd.sql
+echo "INSERT INTO env (name, value) VALUES (\"rapVersion\", \"$softwareVersion\"), (\"installDate\", \"$installDate\");" >> roadapplepi-configd.sql
 sudo mysql < roadapplepi-configd.sql
 
 echo "\nDone! Please reboot your Raspberry Pi now"
