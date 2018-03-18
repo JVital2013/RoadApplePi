@@ -1,5 +1,7 @@
 #!/bin/bash
-echo -e "\e[1;4;246mRoadApplePi Setup v1.0\e[0m
+softwareVersion=$(git describe --long)
+
+echo -e "\e[1;4;246mRoadApplePi Setup $softwareVersion\e[0m
 Welcome to RoadApplePi setup. RoadApplePi is \"Black Box\" software that
 can be retrofitted into any car with an OBD port. This software is meant
 to be installed on a Raspberry Pi running unmodified Raspbian Stretch,
@@ -38,12 +40,19 @@ sudo systemctl disable hostapd dnsmasq
 # Build FFMpeg #
 ################
 echo -e "\e[1;4;93mStep 3. Build ffmpeg (this may take a while)\e[0m"
-wget https://www.ffmpeg.org/releases/ffmpeg-3.4.2.tar.gz
-tar -xvf ffmpeg-3.4.2.tar.gz
-cd ffmpeg-3.4.2
-./configure --enable-gpl --enable-nonfree --enable-mmal --enable-omx --enable-omx-rpi
-make -j$(nproc)
-sudo make install
+ffmpegLocation=$(which ffmpeg)
+if [ $? == 0]
+then
+	wget https://www.ffmpeg.org/releases/ffmpeg-3.4.2.tar.gz
+	tar -xvf ffmpeg-3.4.2.tar.gz
+	cd ffmpeg-3.4.2
+	echo "./configure --enable-gpl --enable-nonfree --enable-mmal --enable-omx --enable-omx-rpi"
+	./configure --enable-gpl --enable-nonfree --enable-mmal --enable-omx --enable-omx-rpi
+	make -j$(nproc)
+	sudo make install
+else
+	echo "FFMpeg already found at $ffmpegLocation! Using installed version."
+fi
 
 #######################
 # Install RoadApplePi #
@@ -64,6 +73,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable raprec
 sudo cp hostapd-rap.conf /etc/hostapd
 sudo cp dnsmasq.conf /etc
-sudo mysql < roadapplepi.sql
+
+installDate=$(date)
+cp roadapplepi.sql roadapplepi-configd.sql
+echo "INSERT INTO env (name, value) VALUES (\"rapVersion\", \"$softwareVersion\";" >> roadapplepi-configd.sql
+echo "INSERT INTO env (name, value) VALUES (\"installDate\", \"$installDate\";" >> roadapplepi-configd.sql
+sudo mysql < roadapplepi-configd.sql
 
 echo "\nDone! Please reboot your Raspberry Pi now"
