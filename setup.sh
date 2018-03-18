@@ -41,7 +41,7 @@ sudo systemctl disable hostapd dnsmasq
 ################
 echo -e "\e[1;4;93mStep 3. Build ffmpeg (this may take a while)\e[0m"
 ffmpegLocation=$(which ffmpeg)
-if [ $? == 0]
+if [ $? != 0 ]
 then
 	wget https://www.ffmpeg.org/releases/ffmpeg-3.4.2.tar.gz
 	tar -xvf ffmpeg-3.4.2.tar.gz
