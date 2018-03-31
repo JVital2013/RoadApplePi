@@ -46,9 +46,6 @@ if($_GET['action'] == "obdLog")
 //Gets latest OBD Information
 if($_GET['action'] == "obdDump" && is_numeric($_GET['timestamp']))
 {
-	//Only called during gauge sync, which requires an accurate clock. Sync time now
-	system("raprun -n " . $_GET['timestamp']);
-	
 	$mysqli = new mysqli('127.0.0.1', 'roadapplepi', 'roadapplepi', 'roadapplepi');
 	if ($mysqli->connect_errno) die("[]");
 	
@@ -142,25 +139,62 @@ if($_GET['action'] == "currentSettings")
 	$getValue = $result->fetch_assoc();
 	$dataToReturn["OBD"] = $getValue['value'];
 	if($dataToReturn["OBD"] == "") $dataToReturn["OBD"] = "Not paired!";
+	$result->free();
 
 	$sql = "SELECT value FROM env WHERE name='mode'";
 	$result = $mysqli->query($sql);
 	$getValue = $result->fetch_assoc();
 	$dataToReturn["Mode"] = ($getValue['value'] == "client" ? 1 : 0);
+	$result->free();
 
 	$sql = "SELECT value FROM env WHERE name='ssid'";
 	$result = $mysqli->query($sql);
 	$getValue = $result->fetch_assoc();
 	$dataToReturn["SSID"] = $getValue['value'];
+	$result->free();
 
 	$sql = "SELECT value FROM env WHERE name='psk'";
 	$result = $mysqli->query($sql);
 	$getValue = $result->fetch_assoc();
 	$dataToReturn["PSK"] = $getValue['value'];
-
 	$result->free();
+	
 	$mysqli->close();
+	echo json_encode($dataToReturn);
+	exit();
+}
 
+//Get system information
+if($_GET['action'] == "sysInfo")
+{
+	$mysqli = new mysqli('127.0.0.1', 'roadapplepi', 'roadapplepi', 'roadapplepi');
+	if ($mysqli->connect_errno) die();
+
+	$sql = "SELECT value FROM env WHERE name='rapVersion'";
+	$result = $mysqli->query($sql);
+	$getValue = $result->fetch_assoc();
+	$dataToReturn["rapVersion"] = $getValue['value'];
+	$result->free();
+
+	$sql = "SELECT value FROM env WHERE name='installDate'";
+	$result = $mysqli->query($sql);
+	$getValue = $result->fetch_assoc();
+	$dataToReturn["installDate"] = $getValue['value'];
+	$result->free();
+	
+	$mysqli->close();
+	
+	exec("lsb_release -d --short", $outputArray);
+	$dataToReturn["osName"] = $outputArray[0];
+	$dataToReturn["kernelVersion"] = php_uname("r");
+	$baseModel = fopen("/sys/firmware/devicetree/base/model", "r");
+	if($baseModel === false) $dataToReturn["baseModel"] = "Unknown";
+	else
+	{
+		$dataToReturn["baseModel"] = fread($baseModel, filesize("/sys/firmware/devicetree/base/model"));
+		fclose($baseModel);
+	}
+	
 	echo json_encode($dataToReturn);
 	exit();
 }

@@ -49,7 +49,8 @@
 			<div class='mainBodyPadding'></div>
 			<div id='menuItem0' onclick='menuSelect(0);' class='menuItem'><i class="fa fa-tachometer-alt" aria-hidden="true" style='font-size: 18pt; vertical-align: middle;'></i><div style='vertical-align: middle; display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</div></div>
 			<div id='menuItem1' onclick='menuSelect(1);' class='menuItem'><i class="fa fa-video" aria-hidden="true" style='font-size: 18pt; vertical-align: middle;'></i><div style='vertical-align: middle; display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recordings</div></div>
-			<div id='menuItem2' onclick='menuSelect(2);' class='menuItem'><i class="fa fa-cog" aria-hidden="true" style='font-size: 18pt; vertical-align: middle;'></i><div style='vertical-align: middle; display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Settings</div></div>
+			<div id='menuItem2' onclick='menuSelect(2);' class='menuItem'><i class="fa fa-info-circle" aria-hidden="true" style='font-size: 18pt; vertical-align: middle;'></i><div style='vertical-align: middle; display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System Info</div></div>
+			<div id='menuItem3' onclick='menuSelect(3);' class='menuItem'><i class="fa fa-cog" aria-hidden="true" style='font-size: 18pt; vertical-align: middle;'></i><div style='vertical-align: middle; display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Settings</div></div>
 		</div>
 		<div class='mainBody' onclick='retractDrawer();'>
 			<div class='mainBodyPadding'></div>

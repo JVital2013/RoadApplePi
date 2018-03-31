@@ -1,6 +1,6 @@
 all: raprec raprun
 raprec: raprec.c
-	gcc raprec.c -o raprec -Wall -lmysqlclient -lbluetooth
+	gcc raprec.c -o raprec -Wall -lmysqlclient -lm
 raprun: raprun.c
 	gcc raprun.c -o raprun -Wall -lmysqlclient -lbluetooth
 

@@ -32,6 +32,8 @@ var savedOBDLogs = [];
 var updateLastTimeInstance, lastSeconds, lastHours, lastMinutes, obdStream, getSupportedGauges, getInitialStatus, refreshValue, obdLog, obdCodes, fetchCodes, fetchGauges, fetchVideo, obdPlayerInstance, currentVideo, videoArray, dateArray, videoSelect, calcEngineLoad, coolantTemp, b1stft, b1ltft, b2stft, b2ltft, intakePressure, rpm, speed, timingAdvance, airTemp, throttlePos;
 
 var LOADING_TEXT = "<div style='height: 10px;'></div><div class='loadWait'>Loading, please wait...</div>";
+var ERROR_TEXT = "<div style='height: 10px;'></div><div class='loadWait'>There was an error loading this page</div>";
+var sysPropNames = {"rapVersion" : "RoadApplePi Verison", "installDate" : "RoadApplePi Install Date", "osName" : "Operating System", "kernelVersion" : "Linux Kernel", "baseModel" : "Hardware"};
 
 function slideDrawer()
 {
@@ -101,7 +103,7 @@ function menuSelect(menuNumber)
 				try { videoArray = JSON.parse(this.responseText); }
 				catch(err)
 				{
-					mainContent.innerHTML = "<div style='height: 10px;'></div><div class='loadWait'>There was an error loading this page</div>";
+					mainContent.innerHTML = ERROR_TEXT;
 					return;
 				}
 
@@ -139,6 +141,94 @@ function menuSelect(menuNumber)
 		break;
 		
 		case 2:
+		barTitle.innerHTML = "System Info";
+		mainContent.innerHTML = LOADING_TEXT;
+		xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function()
+		{
+			//Online mode, fetch from server
+			working = false;
+			if(this.readyState == 4 && this.status == 200)
+			{
+				try { sysInfo = JSON.parse(this.responseText); }
+				catch(err)
+				{
+					mainContent.innerHTML = ERROR_TEXT;
+					return;
+				}
+				
+				//Save to localStorage for offline view
+				localStorage.setItem("sysInfo", JSON.stringify(sysInfo));
+				working = true;
+			}
+			
+			//Offline mode, view cached information
+			else if (xhttp.readyState == 4 && xhttp.status == 0)
+			{
+				if(localStorage.getItem('sysInfo') != null)
+				{
+					try { sysInfo = JSON.parse(localStorage.getItem('sysInfo')); }
+					catch(err)
+					{
+						mainContent.innerHTML = ERROR_TEXT;
+						return;
+					}
+					
+					working = true;
+				}
+				else
+				{
+					mainContent.innerHTML = ERROR_TEXT;
+					return;
+				}
+			}
+			
+			if(working)
+			{
+				infoBox = document.createElement("div");
+				infoBox.className = "settingsList";
+				infoBox.style.marginTop = "20px";
+				mainContent.innerHTML = "<div style='height: 10px;'></div>";
+				
+				rapLogo = document.createElement("img");
+				rapLogo.src="icon.png";
+				rapLogo.className = "rapIcon";
+				mainContent.appendChild(rapLogo);
+				
+				
+				rapLabel = document.createElement("div");
+				rapLabel.className = "rapLabel";
+				rapLabel.innerHTML = "RoadApplePi";
+				mainContent.appendChild(rapLabel);
+				
+				if(typeof sysInfo.rapVersion != "undefined")
+				{
+					rapVersion = document.createElement("div");
+					rapVersion.className = "rapVersion";
+					rapVersion.innerHTML = sysInfo.rapVersion;
+					mainContent.appendChild(rapVersion);
+				}
+				mainContent.appendChild(infoBox);
+				
+			
+				for (var key in sysInfo)
+				{
+					if (typeof sysInfo[key] !== 'function')
+					{
+						if(key == "rapVersion") continue;
+						newSysProp = document.createElement("div");
+						newSysProp.className = "settingsItem settingsItemNoClick";
+						newSysProp.innerHTML = "<div class='sysProp'>" + sysPropNames[key] + "</div><div class='sysProp'>" + sysInfo[key] + "</div>";
+						infoBox.appendChild(newSysProp);
+					}
+				}
+			}
+		};
+		xhttp.open("GET", "dataHandler.php?action=sysInfo", true);
+		xhttp.send();
+		break;
+		
+		case 3:
 		barTitle.innerHTML = "Settings";
 		mainContent.innerHTML = "";
 

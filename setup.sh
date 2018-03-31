@@ -73,10 +73,12 @@ sudo systemctl daemon-reload
 sudo systemctl enable raprec
 sudo cp hostapd-rap.conf /etc/hostapd
 sudo cp dnsmasq.conf /etc
+sudo mkdir /var/www/html/vids
+sudo chown -R www-data:www-data /var/www/html
 
 installDate=$(date)
 cp roadapplepi.sql roadapplepi-configd.sql
 echo "INSERT INTO env (name, value) VALUES (\"rapVersion\", \"$softwareVersion\"), (\"installDate\", \"$installDate\");" >> roadapplepi-configd.sql
 sudo mysql < roadapplepi-configd.sql
 
-echo "\nDone! Please reboot your Raspberry Pi now"
+echo "Done! Please reboot your Raspberry Pi now"
