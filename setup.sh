@@ -33,7 +33,7 @@ sudo apt upgrade -y
 # Install pre-built dependencies from Apt #
 ###########################################
 echo -e "\e[1;4;93mStep 2. Install pre-built dependencies from Apt\e[0m"
-sudo apt install -y dnsmasq hostapd libbluetooth-dev apache2 php7.0 php7.0-mysql php7.0-bcmath mariadb-server libmariadbclient-dev libmariadbclient-dev-compat uvcdynctrl
+sudo apt install -y dnsmasq hostapd libbluetooth-dev apache2 php7.3 php7.3-mysql php7.3-bcmath mariadb-server libmariadbclient-dev libmariadbclient-dev-compat uvcdynctrl
 sudo systemctl disable hostapd dnsmasq
 
 ################
@@ -50,6 +50,7 @@ then
 	./configure --enable-gpl --enable-nonfree --enable-mmal --enable-omx --enable-omx-rpi
 	make -j$(nproc)
 	sudo make install
+	cd ..
 else
 	echo "FFMpeg already found at $ffmpegLocation! Using installed version."
 fi
@@ -58,7 +59,6 @@ fi
 # Install RoadApplePi #
 #######################
 echo -e "\e[1;4;93mStep 4. Building and installing RoadApplePi\e[0m"
-cd ..
 make
 sudo make install
 

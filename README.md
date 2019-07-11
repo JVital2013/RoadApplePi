@@ -27,11 +27,12 @@ RoadApplePi is designed to work with as little or much as you have. Bare minimum
  - **Bluetooth ELM327 OBDII adapter (optional)** While technically optional, a Bluetooth ELM327 adapter is required to record engine information. They're around $10 on Amazon and completely worth the price.
 
 ## Installation
+Updated for Buster
  1. Flash Raspbian (lite) onto an SD Card and boot your Raspberry Pi, performing any initial setup needed to get it connected to the internet
  2. From the command line, run:
 	```
 	sudo apt update && sudo apt install -y git
-	git clone https://github.com/JVital2013/RoadApplePi
+	git clone https://github.com/matt2005/RoadApplePi
 	cd RoadApplePi
 	./setup.sh
 	sudo reboot
