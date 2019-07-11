@@ -32,7 +32,7 @@ Updated for Buster
  2. From the command line, run:
 	```
 	sudo apt update && sudo apt install -y git
-	git clone https://github.com/matt2005/RoadApplePi
+	git clone https://github.com/JVital2013/RoadApplePi
 	cd RoadApplePi
 	./setup.sh
 	sudo reboot
