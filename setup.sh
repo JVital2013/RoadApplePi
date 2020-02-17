@@ -13,9 +13,15 @@ This script will download, compile, and install the necessary dependencies
 before finishing installing RoadApplePi itself. Depending on your model of
 Raspberry Pi, this may take several hours.
 "
+#!/bin/bash
+if [ $# -ge 1 ]
+then
+    $answer = $1
+else
+    #Prompt user if they want to continue
+	read -p "Would you like to continue? (y/N) " answer
+fi
 
-#Prompt user if they want to continue
-read -p "Would you like to continue? (y/N) " answer
 if [ "$answer" == "n" ] || [ "$answer" == "N" ] || [ "$answer" == "" ]
 then
 	echo "Setup aborted"
